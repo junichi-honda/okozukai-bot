@@ -12,15 +12,16 @@
 
 ## 現在の状態
 
-最終的には Raspberry Pi 4 上で Slack Bolt(Socket Mode)+ SQLite として動かす想定。
-現時点では **Cloudflare Workers + D1 を使ったテストデプロイ版**のみを実装している。
+本番は Raspberry Pi 4 上で Slack Bolt(Socket Mode)+ SQLite + LCD/ブザー/ボタンで
+動かす(`pi/`)。Slack 側のロジックは事前に Cloudflare Workers + D1 のテスト
+デプロイ版(`cloudflare/`)で検証済みで、そちらは動作確認用として残してある。
 
-→ 詳細・セットアップ手順は [`cloudflare/README.md`](cloudflare/README.md) を参照。
+→ Pi 4 版のセットアップ手順は [`pi/README.md`](pi/README.md)
+→ Cloudflare テスト版は [`cloudflare/README.md`](cloudflare/README.md)
 
 ## ディレクトリ構成
 
 ```
+pi/           Raspberry Pi 4 向け本実装(Slack Bolt Socket Mode + SQLite + LCD/ブザー/ボタン)
 cloudflare/   Cloudflare Workers + D1 によるテスト実装(HTTP モード)
 ```
-
-Pi 4 向けの Python 実装(Socket Mode + SQLite)は未着手。

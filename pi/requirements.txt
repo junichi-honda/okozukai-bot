@@ -1,0 +1,9 @@
+slack_bolt==1.30.0
+slack_sdk==3.43.0
+python-dotenv==1.2.2
+
+# 実機(Pi 4)でのみ必要。この開発機のような Pi 以外の環境では
+# OKOZUKAI_HARDWARE=dummy にしてインストール自体を省略してよい。
+gpiozero==2.0.1.post3
+RPLCD==1.4.0
+smbus2==0.4.3
