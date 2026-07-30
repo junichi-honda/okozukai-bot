@@ -103,13 +103,13 @@ sudo systemctl enable --now okozukai-bot
 journalctl -u okozukai-bot -f
 ```
 
-`systemd/okozukai-bot.service` 内のパス(`/home/pi/app/pi/...`)は
-実際の配置場所に合わせて書き換えること。
+`systemd/okozukai-bot.service` は `User=jhonda` / `/home/jhonda/app/pi` を
+前提に書いてある。実際の配置場所が異なる場合は書き換えること。
 
 ## 月末サマリの cron 登録(仕様書 §14)
 
 ```
-5 0 1 * * /home/pi/app/pi/.venv/bin/python /home/pi/app/pi/monthly_summary.py >> /home/pi/logs/monthly_summary.log 2>&1
+5 0 1 * * /home/jhonda/app/pi/.venv/bin/python /home/jhonda/app/pi/monthly_summary.py >> /home/jhonda/logs/monthly_summary.log 2>&1
 ```
 
 cron は毎月1日にしか動かないため、動作確認は `--force` を付けて手動実行するか、

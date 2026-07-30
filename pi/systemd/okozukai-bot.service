@@ -5,10 +5,10 @@ Wants=network-online.target
 
 [Service]
 Type=simple
-User=pi
-WorkingDirectory=/home/pi/app/pi
-EnvironmentFile=/home/pi/app/pi/.env
-ExecStart=/home/pi/app/pi/.venv/bin/python /home/pi/app/pi/main.py
+User=jhonda
+WorkingDirectory=/home/jhonda/app/pi
+EnvironmentFile=/home/jhonda/app/pi/.env
+ExecStart=/home/jhonda/app/pi/.venv/bin/python /home/jhonda/app/pi/main.py
 Restart=always
 RestartSec=5
 
