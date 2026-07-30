@@ -1,0 +1,5 @@
+# Slack App-Level Token (xapp-...) — 秘密情報のためコミットしない
+app-level-token
+
+# ローカルの許可設定(個人環境依存)
+.claude/settings.local.json

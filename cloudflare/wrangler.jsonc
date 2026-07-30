@@ -1,0 +1,31 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "okozukai-bot",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-07-01",
+  "observability": {
+    "enabled": true
+  },
+
+  // 仕様書 §2 の確定値。秘密情報ではないので vars に置く。
+  "vars": {
+    "CHANNEL_ID": "C0BLS8KTW90",
+    "SLACK_APPROVERS": "U02LS99PPQE,U02M18CUKPE"
+  },
+
+  // SLACK_BOT_TOKEN / SLACK_SIGNING_SECRET は `wrangler secret put` で登録する。
+
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "okozukai-bot",
+      "database_id": "e6585705-13f4-4802-a099-80fd529c4ede"
+    }
+  ],
+
+  // Cloudflare の cron は UTC 固定。15:05 UTC = 翌日 00:05 JST に相当するため
+  // 毎日この時刻に起動し、JST で1日かどうかを scheduled ハンドラ側で判定する。
+  "triggers": {
+    "crons": ["5 15 * * *"]
+  }
+}

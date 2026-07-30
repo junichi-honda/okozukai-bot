@@ -1,0 +1,18 @@
+{
+  "name": "okozukai-bot-cloudflare",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "tail": "wrangler tail",
+    "migrate:local": "wrangler d1 migrations apply okozukai-bot --local",
+    "migrate:remote": "wrangler d1 migrations apply okozukai-bot --remote",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^5.20260722.1",
+    "typescript": "^5.6.0",
+    "wrangler": "^4.0.0"
+  }
+}
