@@ -119,4 +119,13 @@ with tempfile.TemporaryDirectory() as tmp:
     assert set(errors_bad.keys()) == {"task_B_label", "task_B_amount"}
     print("OK: config modal parse (invalid) reports errors per block_id")
 
+    # 13) 記帳履歴の一括削除(/okozukai debug の削除ボタン)
+    services.add_manual(config.SLACK_APPROVERS[0], "100", "リセットテスト用")
+    assert db.get_balance() != 0, "削除前提のテストなのに残高が既に0円"
+    services.reset_records()
+    assert db.get_balance() == 0
+    assert db.get_ledger_range("2000-01-01", "2100-01-01") == []
+    assert db.get_request(1) is None
+    print("OK: reset_records clears ledger/requests and balance returns to 0")
+
 print("\nALL SMOKE TESTS PASSED")

@@ -206,3 +206,11 @@ def get_task_breakdown(from_date: str, to_date: str) -> list[sqlite3.Row]:
             ORDER BY r.task_id""",
         (from_date, to_date),
     )
+
+
+def reset_records() -> None:
+    """記帳履歴を全消去する(タスク定義は残す)。動作確認用データの一括削除用。"""
+    conn = get_conn()
+    conn.execute("DELETE FROM ledger")
+    conn.execute("DELETE FROM requests")
+    conn.execute("DELETE FROM sqlite_sequence WHERE name IN ('ledger', 'requests')")

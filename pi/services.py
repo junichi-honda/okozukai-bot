@@ -55,6 +55,7 @@ def handle_button_press(task_id: str) -> None:
     gpiozero のコールバックスレッドから呼ばれる。DB 書き込み → (Slack 投稿 |
     自動承認) → LCD/ブザー表示までをこの関数だけで完結させる。
     """
+    logger.info("ボタン押下を検知しました: task_id=%s", task_id)
     _, hardware = _require_wired()
 
     task = db.get_task(task_id)
@@ -300,3 +301,13 @@ def run_monthly_summary(force: bool = False) -> dict[str, Any] | None:
         return {"text": f"📅 {year}年{month}月は記帳がありませんでした。"}
 
     return blocks.monthly_summary_message(year, month, breakdown, totals, diff, ending_balance)
+
+
+# --- デバッグ(仕様書には無い、動作確認用の追加コマンド) ---
+
+
+def reset_records() -> None:
+    """記帳履歴(ledger・requests)を全消去する。タスク定義(tasks)は残す。"""
+    _, hardware = _require_wired()
+    db.reset_records()
+    hardware.show_balance()

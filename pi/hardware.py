@@ -56,7 +56,9 @@ class _BuzzerBackend:
     def __init__(self) -> None:
         from gpiozero import Buzzer
 
-        self._buzzer = Buzzer(config.BUZZER_PIN)
+        # このブザーモジュールは低レベルトリガー(LOW=鳴る/HIGH=鳴らない)のため、
+        # gpiozero のデフォルト極性(HIGH=on)を反転させる。
+        self._buzzer = Buzzer(config.BUZZER_PIN, active_high=False)
 
     def beep(self, times: int, on_seconds: float = 0.15, off_seconds: float = 0.15) -> None:
         import time
@@ -111,9 +113,17 @@ class HardwareController:
         try:
             from gpiozero import Button
 
+            def safe_on_press(tid: str) -> None:
+                # gpiozero のコールバックスレッドで例外が握りつぶされると
+                # 「ボタンを押しても何も起きない」ように見えてしまうため、必ずログに残す。
+                try:
+                    on_press(tid)
+                except Exception:
+                    logger.exception("ボタン押下ハンドラでエラーが発生しました: task_id=%s", tid)
+
             for task_id, pin in config.BUTTON_PINS.items():
                 button = Button(pin, bounce_time=config.BUTTON_BOUNCE_TIME)
-                button.when_pressed = lambda tid=task_id: on_press(tid)
+                button.when_pressed = lambda tid=task_id: safe_on_press(tid)
                 self._buttons.append(button)
         except Exception:
             logger.exception(
