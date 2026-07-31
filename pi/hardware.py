@@ -90,6 +90,7 @@ class HardwareController:
         self.display_queue: "queue.Queue[DisplayEvent]" = queue.Queue()
         self._stop = threading.Event()
         self._thread: threading.Thread | None = None
+        self._buttons: list = []  # Button オブジェクトへの参照を保持(GC でコールバックが失われないように)
 
         use_dummy = config.HARDWARE_BACKEND != "gpio"
         try:
@@ -107,11 +108,18 @@ class HardwareController:
             logger.info("dummy backend のため物理ボタンは登録しません(services から直接呼び出してください)")
             return
 
-        from gpiozero import Button
+        try:
+            from gpiozero import Button
 
-        for task_id, pin in config.BUTTON_PINS.items():
-            button = Button(pin, bounce_time=config.BUTTON_BOUNCE_TIME)
-            button.when_pressed = lambda tid=task_id: on_press(tid)
+            for task_id, pin in config.BUTTON_PINS.items():
+                button = Button(pin, bounce_time=config.BUTTON_BOUNCE_TIME)
+                button.when_pressed = lambda tid=task_id: on_press(tid)
+                self._buttons.append(button)
+        except Exception:
+            logger.exception(
+                "物理ボタンの初期化に失敗しました(配線未接続、または gpiozero のピンファクトリ"
+                "(lgpio 等)が無い可能性があります)。ボタンは無効のまま起動を続けます。"
+            )
 
     # --- 表示スレッド ---
 

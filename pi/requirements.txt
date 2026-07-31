@@ -7,3 +7,4 @@ python-dotenv==1.2.2
 gpiozero==2.0.1.post3
 RPLCD==1.4.0
 smbus2==0.4.3
+lgpio==0.2.2.0
