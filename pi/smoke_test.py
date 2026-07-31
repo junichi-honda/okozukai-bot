@@ -11,6 +11,8 @@ import sys
 import tempfile
 
 os.environ["OKOZUKAI_HARDWARE"] = "dummy"
+os.environ.setdefault("CHANNEL_ID", "CTESTCHANNEL")
+os.environ.setdefault("SLACK_APPROVERS", "UTESTAPPROVER1,UTESTAPPROVER2")
 
 with tempfile.TemporaryDirectory() as tmp:
     os.environ["OKOZUKAI_DB_PATH"] = os.path.join(tmp, "smoke.db")

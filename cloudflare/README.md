@@ -30,9 +30,11 @@ npx wrangler d1 migrations apply okozukai-bot --remote
 
 npx wrangler deploy
 
-# Slack の認証情報を登録
+# Slack の認証情報・ワークスペース固有の値を登録(このリポジトリには値を含めない)
 npx wrangler secret put SLACK_BOT_TOKEN       # xoxb-...
 npx wrangler secret put SLACK_SIGNING_SECRET  # Basic Information の Signing Secret
+npx wrangler secret put CHANNEL_ID            # 申請を投稿するチャンネルの ID(C から始まる文字列)
+npx wrangler secret put SLACK_APPROVERS       # 承認者の Slack ユーザー ID をカンマ区切りで(例: U0000000000,U0000000001)
 ```
 
 ### Slack アプリ側の設定(HTTP モード用)
@@ -41,7 +43,7 @@ npx wrangler secret put SLACK_SIGNING_SECRET  # Basic Information の Signing Se
 2. **Slash Commands > /okozukai** の Request URL に `https://<worker>.workers.dev/`
 3. **Interactivity & Shortcuts → ON**、Request URL に同じ URL
 4. Bot Token Scopes: `chat:write`, `commands`
-5. チャンネル `C0BLS8KTW90` に Bot を招待
+5. `CHANNEL_ID` に指定したチャンネルに Bot を招待
 
 `xapp-...`(App-Level Token)は Socket Mode 専用で、HTTP モードでは使わない。
 

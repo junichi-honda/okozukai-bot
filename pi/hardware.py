@@ -54,19 +54,23 @@ class _DummyLcdBackend:
 
 class _BuzzerBackend:
     def __init__(self) -> None:
-        from gpiozero import Buzzer
+        from gpiozero import PWMOutputDevice
 
         # このブザーモジュールは低レベルトリガー(LOW=鳴る/HIGH=鳴らない)のため、
         # gpiozero のデフォルト極性(HIGH=on)を反転させる。
-        self._buzzer = Buzzer(config.BUZZER_PIN, active_high=False)
+        # 単純な ON/OFF ではなく PWM で駆動し、デューティ比(config.BUZZER_VOLUME)を
+        # 下げることで内蔵オシレーターへの実効電圧を下げ、音量を調整できるようにしている。
+        self._buzzer = PWMOutputDevice(
+            config.BUZZER_PIN, active_high=False, frequency=1000, initial_value=0
+        )
 
     def beep(self, times: int, on_seconds: float = 0.15, off_seconds: float = 0.15) -> None:
         import time
 
         for i in range(times):
-            self._buzzer.on()
+            self._buzzer.value = config.BUZZER_VOLUME
             time.sleep(on_seconds)
-            self._buzzer.off()
+            self._buzzer.value = 0
             if i < times - 1:
                 time.sleep(off_seconds)
 

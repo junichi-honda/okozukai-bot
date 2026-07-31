@@ -7,19 +7,14 @@
     "enabled": true
   },
 
-  // 仕様書 §2 の確定値。秘密情報ではないので vars に置く。
-  "vars": {
-    "CHANNEL_ID": "C0BLS8KTW90",
-    "SLACK_APPROVERS": "U02LS99PPQE,U02M18CUKPE"
-  },
-
-  // SLACK_BOT_TOKEN / SLACK_SIGNING_SECRET は `wrangler secret put` で登録する。
+  // SLACK_BOT_TOKEN / SLACK_SIGNING_SECRET / CHANNEL_ID / SLACK_APPROVERS は
+  // すべて `wrangler secret put` で登録する(このリポジトリには値を含めない)。
 
   "d1_databases": [
     {
       "binding": "DB",
       "database_name": "okozukai-bot",
-      "database_id": "e6585705-13f4-4802-a099-80fd529c4ede"
+      "database_id": "PLACEHOLDER_RUN_WRANGLER_D1_CREATE"
     }
   ],
 
