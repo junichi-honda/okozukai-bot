@@ -1,7 +1,7 @@
 """月末サマリの自動投稿(仕様書 §14)。cron から実行する。
 
-  5 0 1 * * /home/jhonda/app/pi/.venv/bin/python /home/jhonda/app/pi/monthly_summary.py \
-      >> /home/jhonda/logs/monthly_summary.log 2>&1
+  5 0 1 * * /home/pi/app/pi/.venv/bin/python /home/pi/app/pi/monthly_summary.py \
+      >> /home/pi/logs/monthly_summary.log 2>&1
 
 main.py(Socket Mode 常駐プロセス)とは別プロセスとして毎月1回だけ起動する
 軽量スクリプトなので、Bolt App は使わず WebClient で直接投稿する。

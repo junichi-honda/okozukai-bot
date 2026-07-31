@@ -11,13 +11,13 @@ load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent
 
-# --- 仕様書 §2 の確定値 ---
-SLACK_APPROVERS: list[str] = ["U02LS99PPQE", "U02M18CUKPE"]
-CHANNEL_ID: str = "C0BLS8KTW90"
-
-# --- Slack 認証情報(.env で上書きする) ---
+# --- Slack 認証情報・ワークスペース固有の値(.env で設定する) ---
 SLACK_BOT_TOKEN: str = os.environ.get("SLACK_BOT_TOKEN", "")
 SLACK_APP_TOKEN: str = os.environ.get("SLACK_APP_TOKEN", "")
+CHANNEL_ID: str = os.environ.get("CHANNEL_ID", "")
+SLACK_APPROVERS: list[str] = [
+    uid.strip() for uid in os.environ.get("SLACK_APPROVERS", "").split(",") if uid.strip()
+]
 
 # --- DB ---
 DB_PATH: str = os.environ.get("OKOZUKAI_DB_PATH", str(BASE_DIR / "data" / "okozukai.db"))
