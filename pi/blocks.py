@@ -314,3 +314,37 @@ def monthly_summary_message(
             },
         ],
     }
+
+
+def debug_message(diagnostic_text: str) -> dict[str, Any]:
+    """`/okozukai debug` のレスポンス。動作確認で溜まった記帳を消す削除ボタン付き。"""
+    return {
+        "response_type": "ephemeral",
+        "replace_original": False,
+        "text": diagnostic_text,
+        "blocks": [
+            {"type": "section", "text": {"type": "mrkdwn", "text": diagnostic_text}},
+            {"type": "divider"},
+            {
+                "type": "actions",
+                "elements": [
+                    {
+                        "type": "button",
+                        "text": {"type": "plain_text", "text": "テスト記帳を削除"},
+                        "style": "danger",
+                        "action_id": "reset_records",
+                        "value": "reset_records",
+                        "confirm": {
+                            "title": {"type": "plain_text", "text": "確認"},
+                            "text": {
+                                "type": "mrkdwn",
+                                "text": "記帳履歴(申請・元帳)をすべて削除して残高を0円に戻します。この操作は取り消せません。よろしいですか?",
+                            },
+                            "confirm": {"type": "plain_text", "text": "削除する"},
+                            "deny": {"type": "plain_text", "text": "キャンセル"},
+                        },
+                    }
+                ],
+            },
+        ],
+    }

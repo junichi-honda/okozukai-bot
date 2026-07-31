@@ -22,11 +22,12 @@ logger = logging.getLogger("okozukai.slack_bot")
 
 USAGE = "\n".join(
     [
+        "`/okozukai help` — この使い方を表示",
         "`/okozukai add <金額> <メモ>` — 任意金額の追加・訂正(マイナス可、その場合メモ必須)",
         "`/okozukai config` — タスク名・金額・同日重複可否の変更",
         "`/okozukai history [YYYY-MM | YYYY-MM-DD YYYY-MM-DD]` — 記帳履歴",
         "`/okozukai summary` — 月末サマリを今すぐ投稿(cron の動作確認用)",
-        "`/okozukai debug` — Bot Token の疎通確認",
+        "`/okozukai debug` — Bot Token の疎通確認・記帳履歴の一括削除",
     ]
 )
 
@@ -64,8 +65,10 @@ def build_app(hardware: HardwareController) -> App:
             _handle_summary(respond, user_id)
         elif sub == "debug":
             _handle_debug(client, respond, user_id)
-        else:
+        elif sub in ("help", ""):
             respond(replace_original=False, text=f"使い方:\n{USAGE}")
+        else:
+            respond(replace_original=False, text=f"不明なコマンドです: `{sub}`\n\n使い方:\n{USAGE}")
 
     def _handle_config(client, respond, user_id: str, trigger_id: str) -> None:
         if not services.is_approver(user_id):
@@ -131,7 +134,8 @@ def build_app(hardware: HardwareController) -> App:
             result = f"✅ auth.test 成功 — team: {auth['team']} / bot: {auth['user']} ({auth['bot_id']})"
         except SlackApiError as e:
             result = f"❌ auth.test 失敗 — `{e.response.get('error', e)}`"
-        respond(replace_original=False, text=f"{result}\n\nSLACK_BOT_TOKEN の形:\n{shape}")
+        diagnostic_text = f"{result}\n\nSLACK_BOT_TOKEN の形:\n{shape}"
+        respond(**blocks.debug_message(diagnostic_text))
 
     # --- ボタンアクション ---
 
@@ -174,6 +178,20 @@ def build_app(hardware: HardwareController) -> App:
 
         if settled:
             app_client_post({"text": f"💴 全額支払い済みにしました({settled}円)。未払い残高: 0円\n実行者: <@{user_id}>"})
+
+    @app.action("reset_records")
+    def handle_reset_records(ack, body, respond):
+        ack()
+        user_id = body["user"]["id"]
+        if not services.is_approver(user_id):
+            respond(text="この操作は保護者のみ実行できます。", replace_original=False)
+            return
+
+        services.reset_records()
+        respond(
+            replace_original=False,
+            text=f"🗑️ <@{user_id}> が記帳履歴をすべて削除しました。未払い残高: 0円",
+        )
 
     # --- タスク設定モーダルの送信(仕様書 §7) ---
 
