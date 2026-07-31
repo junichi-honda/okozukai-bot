@@ -37,6 +37,10 @@ BUTTON_PINS: dict[str, int] = {
 }
 BUZZER_PIN: int = int(os.environ.get("OKOZUKAI_BUZZER_PIN", "22"))
 LCD_I2C_ADDRESS: int = int(os.environ.get("OKOZUKAI_LCD_I2C_ADDRESS", "0x27"), 16)
+
+# ブザーの音量(PWM デューティ比、0.0〜1.0)。1.0 が最大音量、下げるほど静かになる。
+# モジュールによっては小さくしすぎると鳴らなくなるので、実機で聞きながら調整する。
+BUZZER_VOLUME: float = max(0.0, min(1.0, float(os.environ.get("OKOZUKAI_BUZZER_VOLUME", "1.0"))))
 BUTTON_BOUNCE_TIME: float = 0.2  # 秒。タクトスイッチのチャタリング対策
 
 # --- 表示 ---
