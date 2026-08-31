@@ -24,7 +24,7 @@ export async function runMonthlySummary(env: Env, force = false): Promise<void> 
   ]);
 
   const diff = totals.earn_button + totals.earn_manual + totals.payment;
-  const hasEntries = breakdown.length > 0 || totals.earn_manual !== 0 || totals.payment !== 0;
+  const hasEntries = totals.earn_button !== 0 || totals.earn_manual !== 0 || totals.payment !== 0;
 
   if (!hasEntries) {
     await postMessage(env, {
