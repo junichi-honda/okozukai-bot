@@ -296,7 +296,7 @@ def run_monthly_summary(force: bool = False) -> dict[str, Any] | None:
     ending_balance = db.get_balance_as_of(to)
     diff = totals["earn_button"] + totals["earn_manual"] + totals["payment"]
 
-    has_entries = bool(breakdown) or totals["earn_manual"] != 0 or totals["payment"] != 0
+    has_entries = totals["earn_button"] != 0 or totals["earn_manual"] != 0 or totals["payment"] != 0
     if not has_entries:
         return {"text": f"📅 {year}年{month}月は記帳がありませんでした。"}
 
